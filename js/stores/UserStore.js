@@ -55,20 +55,19 @@ var UserStore = assign({}, EventEmitter.prototype, {
 // Register to handle all updates
 AppDispatcher.register(function(payload) {
   var action = payload.action;
-  var text;
+  var userName;
 
   switch(action.actionType) {
     case UserConstants.USER_CREATE:
-        text = action.text.trim();
-        if (text !== '') {
-          create(text);
+        userName = action.userName.trim();
+        if (userName !== '') {
+          create(userName);
         }
 
         UserStore.emitChange();
         break;
 
     case UserConstants.USER_LOAD:
-    	UserStore.emitChange();
     	break;
 
     case UserConstants.USER_LOAD_SUCCEEDED:

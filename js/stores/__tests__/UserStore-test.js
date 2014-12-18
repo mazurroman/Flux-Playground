@@ -25,14 +25,19 @@ describe('UserStore', function() {
     source: 'VIEW_ACTION',
     action: {
       actionType: UserConstants.USER_CREATE,
-      text: 'foo'
+      userName: 'foo'
     }
   };
-  var actionUserDestroy = {
-    source: 'VIEW_ACTION',
+
+  var actionUserLoadSucceeded = {
+    source: 'SERVER_ACTION',
     action: {
-      actionType: UserConstants.USER_DESTROY,
-      id: 'replace me in test'
+      actionType: UserConstants.USER_LOAD_SUCCEEDED,
+      data: {
+        'foo': {
+          userName: 'bar'
+        }
+      }
     }
   };
 
@@ -46,57 +51,24 @@ describe('UserStore', function() {
     expect(AppDispatcher.register.mock.calls.length).toBe(1);
   });
 
-  it('should initialize with no to-do items', function() {
+  it('should initialize with no users', function() {
     var all = UserStore.getAll();
     expect(all).toEqual({});
   });
 
-  it('creates a to-do item', function() {
+  it('creates a user', function() {
     callback(actionUserCreate);
     var all = UserStore.getAll();
     var keys = Object.keys(all);
     expect(keys.length).toBe(1);
-    expect(all[keys[0]].text).toEqual('foo');
+    expect(all[keys[0]].userName).toEqual('foo');
   });
 
-  it('destroys a to-do item', function() {
-    callback(actionUserCreate);
+  it('loads users', function() {
+    callback(actionUserLoadSucceeded);
     var all = UserStore.getAll();
     var keys = Object.keys(all);
     expect(keys.length).toBe(1);
-    actionUserDestroy.action.id = keys[0];
-    callback(actionUserDestroy);
-    expect(all[keys[0]]).toBeUndefined();
+    expect(all[keys[0]].userName).toEqual('bar');
   });
-
-  it('can determine whether all to-do items are complete', function() {
-    var i = 0;
-    for (; i < 3; i++) {
-      callback(actionUserCreate);
-    }
-    expect(Object.keys(UserStore.getAll()).length).toBe(3);
-    expect(UserStore.areAllComplete()).toBe(false);
-
-    var all = UserStore.getAll();
-    for (key in all) {
-      callback({
-        source: 'VIEW_ACTION',
-        action: {
-          actionType: UserConstants.USER_COMPLETE,
-          id: key
-        }
-      });
-    }
-    expect(UserStore.areAllComplete()).toBe(true);
-
-    callback({
-      source: 'VIEW_ACTION',
-      action: {
-        actionType: UserConstants.USER_UNDO_COMPLETE,
-        id: key
-      }
-    });
-    expect(UserStore.areAllComplete()).toBe(false);
-  });
-
 });
