@@ -9,11 +9,9 @@
  * TodoConstants
  */
 
-var keyMirror = require('keymirror');
-
-module.exports = keyMirror({
-  USER_CREATE: null,
-  USER_LOAD: null,
-  USER_LOAD_SUCCEEDED: null,
-  USER_LOAD_FAILED: null
-});
+module.exports = {
+  USER_CREATE: "USER_CREATE",
+  USER_LOAD: "USER_LOAD",
+  USER_LOAD_SUCCEEDED: "USER_LOAD_SUCCEEDED",
+  USER_LOAD_FAILED: "USER_LOAD_FAILED"
+};
