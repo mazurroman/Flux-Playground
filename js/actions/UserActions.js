@@ -10,12 +10,12 @@ var UserConstants = require('../constants/UserConstants');
 var UserActions = {
 
   /**
-   * @param  {string} text
+   * @param  {string} userName
    */
-  create: function(text) {
+  create: function(userName) {
     AppDispatcher.handleViewAction({
       actionType: UserConstants.USER_CREATE,
-      text: text
+      userName: userName
     });
   },
 

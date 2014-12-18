@@ -19,7 +19,7 @@ function create(userName) {
   _users[id] = {
     id: id,
     userName: userName,
-    phoneNumber: '777 999 888'
+    phone: '777 999 888'
   };
 }
 
