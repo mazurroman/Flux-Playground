@@ -33,6 +33,7 @@
   },
   "jest": {
     "rootDir": "./js",
-    "unmockedModulePathPatterns": ["./node_modules/react"]
+    "scriptPreprocessor": "<rootDir>/preprocessor.js",
+    "unmockedModulePathPatterns": ["./node_modules/react", "object-assign"]
   }
 }

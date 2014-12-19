@@ -1,6 +1,6 @@
 var React = require('react');
-var UserStore = require('../stores/UserStore'); // TODO: Store bude mit parent a ja to dostanu jako props nebo atribut
-var UserActions = require('../actions/UserActions');
+var UserStore = require('../stores/UserStore.js'); // TODO: Store bude mit parent a ja to dostanu jako props nebo atribut
+var UserActions = require('../actions/UserActions.js');
 
 getUsersState = function () {
 	return {
