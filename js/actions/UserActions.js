@@ -9,49 +9,41 @@ var UserConstants = require('../constants/UserConstants');
 
 var UserActions = {
 
-  /**
-   * @param  {string} userName
-   */
-  create: function(userName) {
-    AppDispatcher.handleViewAction({
-      actionType: UserConstants.USER_CREATE,
-      userName: userName
-    });
-  },
+    /**
+     * @param  {string} userName
+     */
+    create: function(userName) {
+        AppDispatcher.handleViewAction({
+            actionType: UserConstants.USER_CREATE,
+            userName: userName
+        });
+    },
 
-  loadUsers: function () {
-    setTimeout(function () {
-      AppDispatcher.handleServerAction({
-        actionType: UserConstants.USER_LOAD_SUCCEEDED,
-        data: {
-          '0x1q': {
-            id: 0,
-            userName: 'Roman',
-            phone: '+420 725 033 478'
-          },
-          '190j': {
-            id: 1,
-            userName: 'Ales',
-            phone: '+420 xxx xxx xxx'
-          },
-          '28u1': {
-            id: 2,
-            userName: 'Honza',
-            phone: '+420 xxx xxx xxx'
-          }
+    loadUsers: function() {
+        var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4) {
+                if (xmlhttp.status == 200) {
+                    AppDispatcher.handleServerAction({
+                        actionType: UserConstants.USER_LOAD_SUCCEEDED,
+                        data: JSON.parse(xmlhttp.responseText)
+                    });
+                } else if (xmlhttp.status == 400) {
+                    alert('There was an error 400');
+                } else {
+                    alert('something else other than 200 was returned');
+                }
+            }
         }
-      });
 
-      // AppDispatcher.handleServerAction({
-      //   actionType: UserConstants.USER_LOAD_FAILED,
-      //   data: {}
-      // })
-    }, 1000);
+        xmlhttp.open("GET", "http://private-4582-kentico1.apiary-mock.com/users", true);
+        xmlhttp.send();
 
-    AppDispatcher.handleViewAction({
-      actionType: UserConstants.USER_LOAD
-    });
-  }
+        AppDispatcher.handleViewAction({
+            actionType: UserConstants.USER_LOAD
+        });
+    }
 
 };
 
