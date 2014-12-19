@@ -1,18 +1,17 @@
 var React = require('react/addons');
 
-
 var Grid = React.createClass({
 
 	render: function () {
-		var tableItems = [],
-				users = this.props.users;
+		var gridItems = [],
+				data = this.props.data;
 
-		for (var userId in users) {
-			if (users.hasOwnProperty(userId)) {
-				tableItems.push(
-					<tr key={users[userId].id}>
-						<td>{users[userId].userName}</td>
-						<td>{users[userId].phone}</td>
+		for (var dataItemId in data) {
+			if (data.hasOwnProperty(dataItemId)) {
+				gridItems.push(
+					<tr key={data[dataItemId].id}>
+						<td>{data[dataItemId].userName}</td>
+						<td>{data[dataItemId].phone}</td>
 					</tr>
 				);
 			}
@@ -27,7 +26,7 @@ var Grid = React.createClass({
 					</tr>
 				</thead>
 				<tbody>
-					{tableItems}
+					{gridItems}
 				</tbody>
 			</table>
 		);
