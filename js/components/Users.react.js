@@ -2,22 +2,23 @@ var React = require('react/addons');
 var UserStore = require('../stores/UserStore.js'); // TODO: Store bude mit parent a ja to dostanu jako props nebo atribut
 var UserActions = require('../actions/UserActions.js');
 var Grid = require('./Grid.react.js');
+var Filter = require('./Filter.react.js');
 
 getUsersState = function () {
 	return {
-		users: UserStore.getAll()
+		users: UserStore.getVisibleUsers()
 	}
 }
 
 var Users = React.createClass({
 
-	// getInitialState: function () {
-	// 	return getUsersState();
-	// },
+	getInitialState: function () {
+		return getUsersState();
+	},
 
 	componentDidMount: function () {
 		UserStore.addChangeListener(this._onChange);
-		UserActions.loadUsers();
+		
 	},
 
 	componentWillUnmount: function () {
@@ -28,17 +29,23 @@ var Users = React.createClass({
 	 * @return {object}
 	 */
 	render: function() {
+		if (!this.state.users) {
+			return (
+				<div>Data not loaded yet</div>
+			);
+		}
+
 		return (
 			<div>
 				<h1>Users</h1>
-				<Grid users={UserStore.getAll()} />
-				<button onClick={this._addNewItem}>Add Item</button>
+				<Filter onChange={this._onFilterChanged} />
+				<Grid data={this.state.users} />
 			</div>
 		);
 	},
 
-	_addNewItem: function () {
-		UserActions.create('Roman');
+	_onFilterChanged: function(filterFunction){
+		UserActions.filterUsers(filterFunction);
 	},
 
 	_onChange: function () {
