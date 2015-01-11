@@ -12,4 +12,5 @@
 module.exports = {
   USER_LOAD: "USER_LOAD",
   USER_FILTER: "USER_FITER",
+  USER_FITER_RESET: "USER_FITER_RESET"
 };

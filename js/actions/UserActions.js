@@ -35,12 +35,18 @@ var UserActions = {
         });
     },
 
-    filterUsers: function(filterFunction) {
+    filterUsers: function(filterData) {
         AppDispatcher.handleViewAction({
             actionType: UserConstants.USER_FILTER,
-            filterFunction: filterFunction
+            filterData: filterData
         });
     },
+
+    filterReset: function () {
+        AppDispatcher.handleViewAction({
+            actionType: UserConstants.USER_FILTER_RESET
+        })
+    }
 
 };
 

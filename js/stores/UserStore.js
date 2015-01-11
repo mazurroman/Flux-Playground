@@ -5,9 +5,15 @@ var assign = require('object-assign');
 var _ = require('underscore');
 
 var CHANGE_EVENT = 'change';
+var DEFAULT_FILTER_DATA = {
+    drinksCoffee: false,
+    userName: ''
+};
 
 var _users = undefined;
-var _visibleUsers = undefined;
+var _isLoaded = false;
+var _isFilterApplied = false;
+var _filterConfig = DEFAULT_FILTER_DATA;
 
 var UserStore = assign({}, EventEmitter.prototype, {
 
@@ -20,7 +26,22 @@ var UserStore = assign({}, EventEmitter.prototype, {
     },
 
     getVisibleUsers: function() {
-        return _visibleUsers;
+        if (_isFilterApplied) {
+            return _.filter(_users, function (u) {
+                return (u.drinksCoffee === _filterConfig.drinksCoffee) &&
+                        u.userName.toLowerCase().indexOf(_filterConfig.userName) > -1;
+            });
+        }
+
+        return _users;
+    },
+
+    getFilterConfig: function () {
+        return _filterConfig;
+    },
+
+    isFilterApplied: function () {
+        return _isFilterApplied;
     },
 
     emitChange: function() {
@@ -42,7 +63,6 @@ var UserStore = assign({}, EventEmitter.prototype, {
     }
 });
 
-var userLoadPromise;
 
 // Register to handle all updates
 AppDispatcher.register(function(payload) {
@@ -51,11 +71,11 @@ AppDispatcher.register(function(payload) {
 
     switch (action.actionType) {
         case UserConstants.USER_LOAD:
-            console.log('user load action');
+            var userLoadPromise;
             userLoadPromise = action.promise;
 
             userLoadPromise.then(function(data) {
-                _visibleUsers = _users = data;
+                _users = data;
                 // profiltruju, kdyz tam je ulozeny nejaky filtr z minula
                 UserStore.emitChange();
             });
@@ -63,12 +83,17 @@ AppDispatcher.register(function(payload) {
             break;
 
         case UserConstants.USER_FILTER:
-            console.log('user filter action');
-            userLoadPromise.then(function () {
-                _visibleUsers = _.filter(_users, action.filterFunction);
+            _isFilterApplied = true;
+            _filterConfig = action.filterData;
 
-                UserStore.emitChange();
-            });
+            UserStore.emitChange();
+
+            break;
+
+        case UserConstants.USER_FILTER_RESET:
+            _isFilterApplied = false;
+            _filterConfig = DEFAULT_FILTER_DATA;
+            UserStore.emitChange();
 
             break;
 

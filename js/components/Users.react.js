@@ -6,7 +6,9 @@ var Filter = require('./Filter.react.js');
 
 getUsersState = function () {
 	return {
-		users: UserStore.getVisibleUsers()
+		users: UserStore.getVisibleUsers(),
+		filter: UserStore.getFilterConfig(),
+		filterIsActive: UserStore.isFilterApplied()
 	}
 }
 
@@ -35,16 +37,19 @@ var Users = React.createClass({
 			);
 		}
 
+		var filterIsActive = this.state.filterIsActive ? 'yes' : 'no';
+
 		return (
 			<div>
 				<h1>Users</h1>
-				<Filter onChange={this._onFilterChanged} />
+				Filter is active: {filterIsActive}
+				<Filter config={this.state.filter} />
 				<Grid data={this.state.users} />
 			</div>
 		);
 	},
 
-	_onFilterChanged: function(filterFunction){
+	_onFilterChanged: function(filterFunction) {
 		UserActions.filterUsers(filterFunction);
 	},
 

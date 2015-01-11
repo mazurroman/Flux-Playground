@@ -1,20 +1,10 @@
 var React = require('react/addons');
+var UserActions = require('../actions/UserActions.js');
 
 var Filter = React.createClass({
 
 	getInitialState: function () {
-		return {
-			drinksCoffee: false,
-			name: '',
-		};
-	},
-
-	propTypes: {
-		onChange: React.PropTypes.func.isRequired
-	},
-
-	componentDidMount: function () {
-		this._onChange();
+		return this.props.config;
 	},
 
 	render: function() {
@@ -24,40 +14,35 @@ var Filter = React.createClass({
 				<input checked={this.state.drinksCoffee} 
 						ref="checkboxFilter" 
 						type="checkbox" 
-						onChange={this._onCheckboxChange} /><br />
+						onChange={this._onDrinksCoffeeChanged} /><br />
 				Name: 
-				<input value={this.state.name}
+				<input value={this.state.userName}
 						ref="textFilter"
 						type="text"
-						onChange={this._onInputChange}
-						placeholder="filter" />
+						onChange={this._onUserNameChanged}
+						placeholder="filter" /><br />
+				<button onClick={this._resetFilter}>Reset filter</button>
 			</div>
 		);
 	},
 
-	_filterFunction: function(user) {
-        // Get checkbox value
-        var checkboxValue = this.state.drinksCoffee;
-
-        // Get input value
-        var inputValue = this.state.name;
-
-        return (user.drinksCoffee === checkboxValue) &&
-            user.userName.toLowerCase().indexOf(inputValue) > -1;
+    _resetFilter: function () {
+    	this.state = this.props.config;
+    	UserActions.filterReset();
     },
 
-    _onInputChange: function (event) {
-		this.setState({ name: event.target.value });
-		this._onChange();
+    _onUserNameChanged: function (event) {
+		this.setState({ userName: event.target.value });
+		this._onFilterChanged();
     },
 
-    _onCheckboxChange: function(event) {
+    _onDrinksCoffeeChanged: function(event) {
 		this.setState({ drinksCoffee: event.target.checked });
-		this._onChange();
+		this._onFilterChanged();
     },
 
-    _onChange: function () {
-    	this.props.onChange(this._filterFunction);
+    _onFilterChanged: function () {
+		UserActions.filterUsers(this.state);
     }
 });
 
