@@ -70,15 +70,10 @@ AppDispatcher.register(function(payload) {
     var userName;
 
     switch (action.actionType) {
-        case UserConstants.USER_LOAD:
-            var userLoadPromise;
-            userLoadPromise = action.promise;
-
-            userLoadPromise.then(function(data) {
-                _users = data;
-                // profiltruju, kdyz tam je ulozeny nejaky filtr z minula
-                UserStore.emitChange();
-            });
+        case UserConstants.USER_LOAD_SUCCEEDED:
+            _users = action.data;
+            
+            UserStore.emitChange();
 
             break;
 
@@ -93,6 +88,7 @@ AppDispatcher.register(function(payload) {
         case UserConstants.USER_FILTER_RESET:
             _isFilterApplied = false;
             _filterConfig = DEFAULT_FILTER_DATA;
+
             UserStore.emitChange();
 
             break;

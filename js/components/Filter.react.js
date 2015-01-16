@@ -1,5 +1,6 @@
 var React = require('react/addons');
 var UserActions = require('../actions/UserActions.js');
+var assign = require('object-assign');
 
 var Filter = React.createClass({
 
@@ -11,12 +12,12 @@ var Filter = React.createClass({
 		return (
 			<div>
 				Drinks coffee: 
-				<input checked={this.state.drinksCoffee} 
+				<input checked={this.props.config.drinksCoffee} 
 						ref="checkboxFilter" 
 						type="checkbox" 
 						onChange={this._onDrinksCoffeeChanged} /><br />
 				Name: 
-				<input value={this.state.userName}
+				<input value={this.props.config.userName}
 						ref="textFilter"
 						type="text"
 						onChange={this._onUserNameChanged}
@@ -27,22 +28,24 @@ var Filter = React.createClass({
 	},
 
     _resetFilter: function () {
-    	this.state = this.props.config;
+    	// this.state = this.props.config;
     	UserActions.filterReset();
     },
 
     _onUserNameChanged: function (event) {
-		this.setState({ userName: event.target.value });
-		this._onFilterChanged();
+		this._onFilterChanged(assign({}, this.props.config, {
+			userName: event.target.value
+		}));
     },
 
     _onDrinksCoffeeChanged: function(event) {
-		this.setState({ drinksCoffee: event.target.checked });
-		this._onFilterChanged();
+		this._onFilterChanged(assign({}, this.props.config, {
+			drinksCoffee: event.target.checked
+		}));
     },
 
-    _onFilterChanged: function () {
-		UserActions.filterUsers(this.state);
+    _onFilterChanged: function (newFilterData) {
+		UserActions.filterUsers(newFilterData);
     }
 });
 
